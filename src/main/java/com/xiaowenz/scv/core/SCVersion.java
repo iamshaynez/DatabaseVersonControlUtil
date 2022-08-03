@@ -40,6 +40,17 @@ public class SCVersion implements Comparable<SCVersion>{
         return scv;
     }
 
+    /**
+     * new Version object
+     * 
+     * @param v
+     * @return
+     * @throws InvalidVersionException
+     */
+    public static SCVersion version(String v) throws InvalidVersionException {
+        return create(v);
+    }
+
     public List<Integer> getVersionList() {
         return versionList;
     }
