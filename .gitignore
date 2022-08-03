@@ -1,0 +1,15 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Mac
+.DS_Store
+
+# VSCode
+.vscode
+.vscode/settings.json
+
+
+.target
