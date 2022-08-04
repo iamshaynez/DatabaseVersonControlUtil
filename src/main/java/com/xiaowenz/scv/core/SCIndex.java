@@ -36,9 +36,10 @@ public class SCIndex {
     public List<SCScript> undo(SCVersion start, SCVersion end){
         SCIndex newIndex = this.loadScripts(SCAction.U, start, end);
         List<SCScript> list = newIndex.listScripts().stream().filter(script -> !SCType.PATCH.equals(script.getScType())).toList();
-        Collections.reverse(list); 
+        ArrayList<SCScript> array = new ArrayList<SCScript>(list);
+        Collections.reverse(array); 
 
-        return list;
+        return array;
     }
 
     /**
