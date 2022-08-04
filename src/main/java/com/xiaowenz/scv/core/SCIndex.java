@@ -2,6 +2,8 @@ package com.xiaowenz.scv.core;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SCIndex {
     private ArrayList<SCScript> scripts = new ArrayList<SCScript>();
@@ -15,6 +17,43 @@ public class SCIndex {
     }
 
     /**
+     * List R scripts in forward order, excluding PATCH
+     * 
+     * @return
+     */
+    public List<SCScript> release(SCVersion start, SCVersion end){
+        SCIndex newIndex = this.loadScripts(SCAction.R, start, end);
+        List<SCScript> list = newIndex.listScripts().stream().filter(script -> !SCType.PATCH.equals(script.getScType())).toList();
+
+        return list;
+    }
+
+    /**
+     * List U scripts in backward order, excluding PATCH
+     * 
+     * @return
+     */
+    public List<SCScript> undo(SCVersion start, SCVersion end){
+        SCIndex newIndex = this.loadScripts(SCAction.U, start, end);
+        List<SCScript> list = newIndex.listScripts().stream().filter(script -> !SCType.PATCH.equals(script.getScType())).toList();
+        Collections.reverse(list); 
+
+        return list;
+    }
+
+    /**
+     * List Patch scripts in forward order, excluding PATCH
+     * 
+     * @return
+     */
+    public List<SCScript> patch(SCVersion start, SCVersion end){
+        SCIndex newIndex = this.loadScripts(SCAction.R, start, end);
+        List<SCScript> list = newIndex.listScripts().stream().filter(script -> SCType.PATCH.equals(script.getScType())).toList();
+
+        return list;
+    }
+
+    /**
      * Load scripts by version scope.
      *
      * Return a same index object with same order
@@ -25,7 +64,7 @@ public class SCIndex {
      * @param end
      * @return
      */
-    public SCIndex loadScripts(SCAction action, SCVersion start, SCVersion end){
+    protected SCIndex loadScripts(SCAction action, SCVersion start, SCVersion end){
         SCIndex newIndex = SCIndex.create();
         if(start.compareTo(end) > 0) {
             return newIndex;
@@ -60,7 +99,7 @@ public class SCIndex {
      */
     private void sortedAdd(ArrayList<SCScript> list, SCScript o) {
         int i = 0;
-        for (Comparable item: list) {
+        for (final Comparable<SCScript> item: list) {
             if(item.compareTo(o) <= 0) {
                 i++;
                 continue;
@@ -78,6 +117,10 @@ public class SCIndex {
                 "scripts=" + scripts +
                 '}';
     }
+
+
+
+
 
     public String scriptsToString(){
         StringBuilder sb = new StringBuilder();
