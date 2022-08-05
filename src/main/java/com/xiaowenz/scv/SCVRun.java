@@ -64,6 +64,7 @@ public class SCVRun {
 
             executor.init(execConfig);
 
+            // Run time
             if(scripts == null) {
                 System.err.println("No scripts will be executed, you might verify the version number or action code.");
             } else {
@@ -83,12 +84,8 @@ public class SCVRun {
             System.err.println("Critical runtime failed.  Reason: " + e.getMessage());
         }
 
-        
 
-        
-
-
-        // Run time
+        // Happy ending
         System.out.println("Completed successfully");
     }
 
@@ -104,9 +101,9 @@ public class SCVRun {
         // Properties for Executor Module
         Option executor = Option.builder("E").hasArgs().valueSeparator('=').required().build();
 
-        // Version From
-        Option start  = Option.builder("start").argName("version").hasArg().desc("version number start from").build();
-        // Version To
+        // Version start from
+        Option start  = Option.builder("start").argName("version").required().hasArg().desc("version number start from").build();
+        // Version end at
         Option end  = Option.builder("end").argName("version").hasArg().required().desc("version number end at").build();
 
         // Action Type
