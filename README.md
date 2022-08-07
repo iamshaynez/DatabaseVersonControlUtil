@@ -126,7 +126,7 @@ It is not neccessary to use subfolders like ddl or dml. Only script file name ma
 # TODO
 
 - [X] Complete core
-- [ ] Interfaces
-- [ ] Runtime
+- [X] Interfaces
+- [X] Runtime
 - [ ] UT
 - [ ] Variables injection
