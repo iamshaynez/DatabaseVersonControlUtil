@@ -7,6 +7,8 @@ import com.xiaowenz.scv.core.SCVersion;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -17,6 +19,8 @@ import org.apache.commons.cli.ParseException;
 
 public class SCVRun {
 
+    private static Logger logger = Logger.getLogger(SCVRun.class.getName());
+
     public static void main(String[] args) {
 
         // Load all parameters
@@ -24,6 +28,7 @@ public class SCVRun {
         try {
             // Load all parameters
             // parse the command line arguments
+            logger.info("Start Runtime, reading args...");
             CommandLine line = parser.parse(buildOptions(), args);
 
             String start = line.getOptionValue("start");
@@ -31,6 +36,7 @@ public class SCVRun {
             String action = line.getOptionValue("action");
 
             // init Script Load instance
+            logger.info("Start Initializing Script Loader...");
             Properties loaderConfig = line.getOptionProperties("L");
 
             if(loaderConfig.getProperty("class") == null) {
@@ -53,6 +59,7 @@ public class SCVRun {
             }
 
             // init Script Execution instance
+            logger.info("Start Initializing Script Executor...");
             Properties execConfig = line.getOptionProperties("E");
 
             if(execConfig.getProperty("class") == null) {
@@ -65,28 +72,29 @@ public class SCVRun {
             executor.init(execConfig);
 
             // Run time
+            logger.info("Start Executing Scripts from Loader...");
             if(scripts == null) {
-                System.err.println("No scripts will be executed, you might verify the version number or action code.");
+                logger.log(Level.SEVERE, "No scripts will be executed, you might verify the version number or action code.");
             } else {
                 executor.execute(scripts, execConfig);
             }
             
         } catch (ParseException exp) {
             // oops, something went wrong
-            System.err.println("Parsing failed.  Reason: " + exp.getMessage());
+            logger.log(Level.SEVERE, "Parsing failed.  Reason: " + exp.getMessage());
         } catch (ScriptConfigException configException) {
-            System.err.println("Config failed.  Reason: " + configException.getMessage());
+            logger.log(Level.SEVERE, "Config failed.  Reason: " + configException.getMessage());
         } catch (InvalidVersionException versionException) {
-            System.err.println("Version invalid failed.  Reason: " + versionException.getMessage());
+            logger.log(Level.SEVERE, "Version invalid failed.  Reason: " + versionException.getMessage());
         } catch (ScriptRuntimeException runtimeException) {
-            System.err.println("Runtime failed.  Reason: " + runtimeException.getMessage());
+            logger.log(Level.SEVERE, "Runtime failed.  Reason: " + runtimeException.getMessage());
         } catch (Exception e) {
-            System.err.println("Critical runtime failed.  Reason: " + e.getMessage());
+            logger.log(Level.SEVERE, "Critical runtime failed.  Reason: " + e.getMessage());
         }
 
 
         // Happy ending
-        System.out.println("Completed successfully");
+        logger.log(Level.INFO, "Completed successfully...");
     }
 
     private static Options buildOptions() {

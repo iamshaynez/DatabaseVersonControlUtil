@@ -1,7 +1,6 @@
 package com.xiaowenz.scv.impl;
 
 import java.io.File;
-import java.util.List;
 import java.util.Properties;
 
 import com.xiaowenz.scv.IScriptLoader;
@@ -13,7 +12,7 @@ import com.xiaowenz.scv.core.SCScript;
 
 public class FolderScriptLoader implements IScriptLoader {
 
-    private static final List<String> ext = null;
+    //private static final List<String> ext = null;
 
     private File folder = null;
 

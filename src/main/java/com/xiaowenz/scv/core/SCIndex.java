@@ -134,26 +134,5 @@ public class SCIndex {
         return sb.toString();
     }
 
-
-    public static void main(String[] args) throws InvalidVersionException {
-        SCIndex index = SCIndex.create();
-        index.add(SCScript.create("R2.0.0_DDL_abc.sql","dummy"));
-        index.add(SCScript.create("R1.0.0_DDL_abc.sql","dummy"));
-        index.add(SCScript.create("R1.0.1_DDL_abc.sql","dummy"));
-
-        index.add(SCScript.create("R1.0.0_DML_abc.sql","dummy"));
-        index.add(SCScript.create("R2.0.1_PATCH_abc.sql","dummy"));
-        index.add(SCScript.create("R3.0.1_DDL_abc.sql","dummy"));
-        index.add(SCScript.create("R2.0.1_DDL_abc.sql","dummy"));
-        index.add(SCScript.create("R1.0.1_DML_abc.sql","dummy"));
-
-        index.add(SCScript.create("U1.0.1_DDL_abc.sql","dummy"));
-        index.add(SCScript.create("U2.0.1_DDL_abc.sql","dummy"));
-        index.add(SCScript.create("U2.0.1_DML_abc.sql","dummy"));
-
-        System.out.println(index.scriptsToString());
-        System.out.println("------ load -----");
-        System.out.println(index.loadScripts(SCAction.R, SCVersion.create("1.0.0"),  SCVersion.create("2.0.0")).scriptsToString());
-    }
 }
 
