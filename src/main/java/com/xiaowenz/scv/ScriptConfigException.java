@@ -13,4 +13,8 @@ public class ScriptConfigException extends Exception{
     public ScriptConfigException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public ScriptConfigException(Exception e) {
+        super(e);
+    }
 }

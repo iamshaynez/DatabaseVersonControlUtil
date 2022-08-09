@@ -56,6 +56,26 @@ public class SCVRun {
                 scripts = index.undo(SCVersion.create(start), SCVersion.create(end));
             } else if("P".equals(action)) {
                 scripts = index.patch(SCVersion.create(start), SCVersion.create(end));
+            } else {
+                // rest goes to R
+                scripts = index.release(SCVersion.create(start), SCVersion.create(end));
+            }
+
+
+            // init Script Variable Injection Handler instance
+            Properties handleConfig = line.getOptionProperties("V");
+            if(handleConfig.getProperty("class") == null) {
+                logger.info("Variable Handler Skipped...");
+            } else {
+                logger.info("Start Initializing Script Variable Handler...");
+                Class<IScriptVariableHandler> handleClass = (Class<IScriptVariableHandler>) Class.forName(handleConfig.getProperty("class"));
+                IScriptVariableHandler handler = handleClass.getDeclaredConstructor().newInstance();
+
+                handler.init(handleConfig);
+
+                List<SCScript> newScripts = handler.handle(scripts, handleConfig);
+
+                scripts = newScripts;
             }
 
             // init Script Execution instance
@@ -109,6 +129,9 @@ public class SCVRun {
         // Properties for Executor Module
         Option executor = Option.builder("E").hasArgs().valueSeparator('=').required().build();
 
+        // Properties for Handler Module
+        Option handler = Option.builder("V").hasArgs().valueSeparator('=').build();
+
         // Version start from
         Option start  = Option.builder("start").argName("version").required().hasArg().desc("version number start from").build();
         // Version end at
@@ -119,6 +142,7 @@ public class SCVRun {
         
         options.addOption(loader);
         options.addOption(executor);
+        options.addOption(handler);
         options.addOption(start);
         options.addOption(end);
         options.addOption(action);

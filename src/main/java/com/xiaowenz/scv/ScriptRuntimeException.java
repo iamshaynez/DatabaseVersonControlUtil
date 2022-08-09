@@ -13,4 +13,8 @@ public class ScriptRuntimeException extends Exception{
     public ScriptRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public ScriptRuntimeException(Exception e) {
+        super(e);
+    }
 }
