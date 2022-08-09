@@ -19,7 +19,7 @@ import com.xiaowenz.scv.core.SCScript;
 
 public class ArgsScriptVariableHandler implements IScriptVariableHandler {
 
-    private Map<String, String> mapping = null;
+    protected Map<String, String> mapping = null;
 
     @Override
     public List<SCScript> handle(List<SCScript> scripts, Properties config) throws ScriptRuntimeException {
@@ -85,7 +85,7 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
         }
 
         this.cleanFolder(output);
-        
+
         mapping = this.buildMapping(config);
     }
 
