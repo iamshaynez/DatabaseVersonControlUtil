@@ -122,11 +122,50 @@ It is not neccessary to use subfolders like ddl or dml. Only script file name ma
 - dml/R1.0.3.1_PATCH_Delete.sql
 - ddl/R1.1.0_NewTable.sql
 - dml/R1.1.0_MetaData.sql
-  
+
+# 运行 Runtime
+
+A simple runtime provided. Launch parameters example as below:
+
+一个简单的运行时提供如下，参数供参考：
+
+```
+        {
+            "type": "java",
+            "name": "Launch SCVRun",
+            "request": "launch",
+            "mainClass": "com.xiaowenz.scv.SCVRun",
+            "args": "-Lclass=com.xiaowenz.scv.impl.FolderScriptLoader -Llocation=/root/dev/DatabaseVersonControlUtil/src/test/resource/scripts/set2 -Eclass=com.xiaowenz.scv.impl.LoggerScriptExecutor -start 1.0.0 -end 1.0.5 -action R",
+            "projectName": "scv"
+        },
+        {
+            "type": "java",
+            "name": "Launch SCVRun With ArgsHandler",
+            "request": "launch",
+            "mainClass": "com.xiaowenz.scv.SCVRun",
+            "args": "-Vclass=com.xiaowenz.scv.impl.ArgsScriptVariableHandler -Venv=PROD -Voutput=/root/dev/DatabaseVersonControlUtil/output -Lclass=com.xiaowenz.scv.impl.FolderScriptLoader -Llocation=/root/dev/DatabaseVersonControlUtil/src/test/resource/scripts/set2 -Eclass=com.xiaowenz.scv.impl.LoggerScriptExecutor -start 1.0.0 -end 1.0.5 -action R",
+            "projectName": "scv"
+        },
+        {
+            "type": "java",
+            "name": "Launch SCVRun With PropsHandler",
+            "request": "launch",
+            "mainClass": "com.xiaowenz.scv.SCVRun",
+            "args": "-Vclass=com.xiaowenz.scv.impl.PropertiesFileScriptVariableHandler -Vmapping=/root/dev/DatabaseVersonControlUtil/src/test/resource/config/mapping.properties -Voutput=/root/dev/DatabaseVersonControlUtil/output -Lclass=com.xiaowenz.scv.impl.FolderScriptLoader -Llocation=/root/dev/DatabaseVersonControlUtil/src/test/resource/scripts/set2 -Eclass=com.xiaowenz.scv.impl.LoggerScriptExecutor -start 1.0.0 -end 1.0.5 -action R",
+            "projectName": "scv"
+        }
+```
+
+You may implement the interface and inject the impl classes into the runtime by passing class into each step.
+
+你可以实现任何一个关键接口，在参数中传入实现类的名称重用这个运行时。
+
+
+
 # TODO
 
 - [X] Complete core
 - [X] Interfaces
 - [X] Runtime
-- [ ] UT
-- [ ] Variables injection
+- [X] UT
+- [X] Variables injection
