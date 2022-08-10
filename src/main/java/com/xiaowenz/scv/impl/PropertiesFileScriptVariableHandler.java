@@ -1,16 +1,22 @@
 package com.xiaowenz.scv.impl;
 
 import java.io.File;
-import java.util.List;
+
 import java.util.Properties;
 
-import com.xiaowenz.scv.IScriptVariableHandler;
-import com.xiaowenz.scv.ScriptConfigException;
 import com.xiaowenz.scv.ScriptRuntimeException;
-import com.xiaowenz.scv.core.SCScript;
-import com.xiaowenz.scv.core.SCUtil;
+
 import com.xiaowenz.scv.util.SCVUtil;
 
+/**
+ * Load variable mapping from local properties file
+ * 
+ * args(V):
+ * 
+ * - output: output folder
+ * - mapping: properties file
+ * - class: this class
+ */
 public class PropertiesFileScriptVariableHandler extends ArgsScriptVariableHandler {
 
     
@@ -33,7 +39,7 @@ public class PropertiesFileScriptVariableHandler extends ArgsScriptVariableHandl
         
         // init mapping from properties file
         String mappingFile = config.getProperty("mapping");
-        if(output == null) {
+        if(mappingFile == null) {
             throw new ScriptRuntimeException("Missing output arg for Handler Config File");
         } 
         mapping = this.buildMapping(SCVUtil.readPropertiesFile(mappingFile));

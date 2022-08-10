@@ -10,6 +10,16 @@ import com.xiaowenz.scv.core.InvalidVersionException;
 import com.xiaowenz.scv.core.SCIndex;
 import com.xiaowenz.scv.core.SCScript;
 
+
+/**
+ * Load Script from local folder
+ * 
+ * args(L)
+ * 
+ * - location: local root folder for scripts
+ * - class: this class
+ */
+
 public class FolderScriptLoader implements IScriptLoader {
 
     //private static final List<String> ext = null;

@@ -9,13 +9,20 @@ import com.xiaowenz.scv.ScriptConfigException;
 import com.xiaowenz.scv.ScriptRuntimeException;
 import com.xiaowenz.scv.core.SCScript;
 
+/**
+ * Mock the script execution by printing into logger
+ * 
+ * args(E)
+ * 
+ * - class: this class
+ */
 public class LoggerScriptExecutor implements IScriptExecutor {
 
     private static Logger logger = Logger.getLogger(LoggerScriptExecutor.class.getName());
 
     public LoggerScriptExecutor() {
 
-    }
+    } 
     
     @Override
     public void init(Properties config) throws ScriptConfigException {

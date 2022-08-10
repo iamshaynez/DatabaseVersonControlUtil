@@ -17,6 +17,17 @@ import com.xiaowenz.scv.IScriptVariableHandler;
 import com.xiaowenz.scv.ScriptRuntimeException;
 import com.xiaowenz.scv.core.SCScript;
 
+/**
+ * Inject variables from cli args
+ * 
+ * if expKey still exists after mapping, error out.
+ * 
+ * Args(H)
+ * 
+ * - output: output folder
+ * - any*(XXX=BBB) will be replaced
+ * 
+ */
 public class ArgsScriptVariableHandler implements IScriptVariableHandler {
 
     protected Map<String, String> mapping = null;
@@ -24,7 +35,6 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
     @Override
     public List<SCScript> handle(List<SCScript> scripts, Properties config) throws ScriptRuntimeException {
         
-   
             String output = config.getProperty("output");
         
             if(output == null) {
@@ -33,19 +43,31 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
 
             List<SCScript> newScripts = new ArrayList<SCScript>();
 
-            // not the decent way to handle exception
+            // not the decent way to handle exception, throw a unchecked RuntimeException to avoid compile error
+            
             scripts.forEach(script -> {
+                Stream<String> lines = null;
                 try {
                     Path filePath = Paths.get(script.getLocation() + File.separator + script.getFileName());
-                    Stream<String> lines = Files.lines(filePath, Charset.forName("UTF-8")); 
+                    lines = Files.lines(filePath, Charset.forName("UTF-8")); 
                     List<String> replacedLine = lines.map(line -> replaceWords(line, mapping)).collect(Collectors.toList());
         
+                    if(checkWords(replacedLine, expKey)) {
+                        throw new Exception(String.format("Script still with %s", expKey)); 
+                    }
+
                     String outputFileFullName = output + File.separator + script.getFileName();
                     Files.write(Paths.get(outputFileFullName), replacedLine, Charset.forName("UTF-8"));
                     newScripts.add(SCScript.create(script.getFileName(), output));
                     lines.close();
                 } catch(Exception e) {
                     throw new RuntimeException(e);
+                } finally {
+                    try {
+                        lines.close();
+                    } catch(Exception e) {
+                        // eaten
+                    }
                 }
                 
             });
@@ -53,9 +75,15 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
         return newScripts;
     }
 
+    /**
+     * Replace all the variables from mapping
+     * 
+     * @param str
+     * @param map
+     * @return
+     */
     protected static String replaceWords(String str, Map<String, String> map) {
         for (Map.Entry<String, String> entry : map.entrySet()) {
-    
             if (str.contains(entry.getKey())) {
                 str = str.replace(entry.getKey(), entry.getValue());
             }
@@ -63,6 +91,26 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
         return str;
     }
 
+    /**
+     * Check if still special key word contains, if so, return true
+     * 
+     * @return
+     */
+    protected static boolean checkWords(List<String> strings, String key) {
+        for (String str : strings) {
+            if(str.contains(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * build mapping from properties config
+     * 
+     * @param config
+     * @return
+     */
     protected Map<String, String> buildMapping(Properties config) {
         Map<String, String> mapping = new HashMap<String, String>();
 
@@ -73,6 +121,7 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
 
     @Override
     public void init(Properties config) throws ScriptRuntimeException {
+        // output temp folder is mandatory
         String output = config.getProperty("output");
         
         if(output == null) {
@@ -84,8 +133,10 @@ public class ArgsScriptVariableHandler implements IScriptVariableHandler {
             throw new ScriptRuntimeException("Output must be a folder: " + output);
         }
 
+        // clean all files under folder
         this.cleanFolder(output);
 
+        // build variable mapping from cli config
         mapping = this.buildMapping(config);
     }
 
