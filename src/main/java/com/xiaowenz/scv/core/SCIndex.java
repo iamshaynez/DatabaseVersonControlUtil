@@ -43,7 +43,7 @@ public class SCIndex {
     }
 
     /**
-     * List Patch scripts in forward order, excluding PATCH
+     * List Patch scripts in forward order
      * 
      * @return
      */
